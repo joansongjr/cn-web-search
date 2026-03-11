@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.3.0
-description: 中文网页搜索 - 聚合 360 搜索 + 搜狗 + 必应 + DuckDuckGo + Hacker News + Reddit + ArXiv，无需 API Key，防封策略
+version: 0.4.0
+description: 中文网页搜索 - 聚合 360 + 搜狗 + 必应 + Qwant + Startpage + DuckDuckGo + Hacker News + Reddit + ArXiv，无需 API Key
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -13,6 +13,8 @@ tags:
   - 360-search
   - sogou
   - bing
+  - qwant
+  - startpage
   - duckduckgo
   - hacker-news
   - reddit
@@ -26,323 +28,176 @@ tags:
 
 # 中文网页搜索 (CN Web Search)
 
-多引擎聚合搜索，零配置，无需 API Key。**内置防封策略 + 备用源**，中文搜索更稳定。
+多引擎聚合搜索，零配置，无需 API Key。**8+ 搜索引擎**，中文/英文/科技/学术全覆盖。
 
-## 搜索引擎选择策略
+## 搜索引擎总览
 
-| 查询类型 | 主引擎 | 备用引擎 | 原因 |
-|---------|-------|---------|------|
-| **中文内容** | 360 搜索移动版 | 搜狗网页 + 必应中文 | 主引擎被限时自动切换 |
-| **英文内容** | DuckDuckGo Lite | 必应英文 | 纯 HTML，零反爬 |
-| **科技新闻** | Hacker News | — | 高质量科技讨论 |
-| **社区讨论** | Reddit | — | 全球最大社区 |
-| **学术论文** | ArXiv | — | 免费学术论文 |
+| 类别 | 引擎 | 状态 | 说明 |
+|------|------|------|------|
+| **中文主引擎** | 360 搜索 | 主 | 可能被限 |
+| **中文备用** | 搜狗网页 | 备用1 | 360 被限时用 |
+| **中文备用** | 必应中文 | 备用2 | 最稳定 |
+| **英文主引擎** | DuckDuckGo Lite | 主 | 零反爬 |
+| **英文备用** | Qwant | 备用1 | 欧洲隐私引擎 |
+| **英文备用** | Startpage | 备用2 | 荷兰引擎 |
+| **英文备用** | 必应英文 | 备用3 | 最后防线 |
+| **科技** | Hacker News | 专用 | API 直接返回 JSON |
+| **社区** | Reddit | 专用 | 真实用户讨论 |
+| **学术** | ArXiv | 专用 | 免费论文 |
 
-## 防封策略（重要！）
+## 防封策略
 
-### 1. 请求间隔
-- **每次搜索后等待 3-5 秒**再发下一个请求
+### 请求间隔
+- 每次搜索后 **等待 3-5 秒**
 - 连续请求不超过 3 次
-- 超过后等待 30 秒再继续
+- 超过后等待 30 秒
 
-### 2. 备用源切换
-当主引擎返回验证码或被拦截时，**自动切换备用引擎**：
-
+### 备用切换逻辑
 ```
-主引擎: 360 搜索移动版 (m.so.com)
-    ↓ 被拦截
-备用1: 搜狗网页搜索 (sogou.com/web)
-    ↓ 被拦截  
-备用2: 必应中文 (cn.bing.com)
+中文: 360 → 搜狗 → 必应
+英文: DDG → Qwant → Startpage → 必应
 ```
-
-### 3. User-Agent
-使用移动版页面（更容易通过）：
-- 360 移动版：`https://m.so.com/...` 
-- 搜狗移动版
-- 必应桌面版反爬较少
 
 ---
 
-## 1. 中文搜索：360 搜索（主引擎）
+## 1. 中文搜索
 
-### 请求方式
-
-```
-web_fetch(url="https://m.so.com/s?q=QUERY", extractMode="text", maxChars=12000)
-```
-
-### 示例
+### 1.1 360 搜索（主）
 
 ```
-web_fetch(url="https://m.so.com/s?q=英伟达最新财报", extractMode="text", maxChars=12000)
-web_fetch(url="https://m.so.com/s?q=光模块行业趋势", extractMode="text", maxChars=12000)
+https://m.so.com/s?q=QUERY
 ```
 
-### 解析结果
+### 1.2 搜狗网页（备用1）
 
-返回文本中搜索结果包含：
-- **标题** — 独立行，带关键词高亮
-- **摘要** — 1-3 行描述
-- **来源和日期** — 如 "新浪财经 2025年11月20日"
+```
+https://www.sogou.com/web?query=QUERY
+```
 
-提取前 5-10 条，跳过广告和推荐卡片。
+### 1.3 必应中文（备用2）
+
+```
+https://cn.bing.com/search?q=QUERY
+```
 
 ---
 
-## 1.5 备用源：搜狗网页搜索
+## 2. 英文搜索
 
-当 360 被拦截时使用。
-
-### 请求方式
+### 2.1 DuckDuckGo Lite（主）
 
 ```
-web_fetch(url="https://www.sogou.com/web?query=QUERY", extractMode="text", maxChars=10000)
+https://lite.duckduckgo.com/lite/?q=QUERY
 ```
 
-### 示例
+### 2.2 Qwant（备用1）⭐ 新增
+
+欧洲隐私搜索引擎，无需 API，完全免费！
 
 ```
-web_fetch(url="https://www.sogou.com/web?query=英伟达财报", extractMode="text", maxChars=10000)
+https://www.qwant.com/?q=QUERY&t=web
 ```
 
-### 解析结果
+### 2.3 Startpage（备用2）⭐ 新增
 
-- 标题在 `<h3 class="vrwrap">` 或 `<h3>` 中
-- 摘要在前几行
-- 来源在 class="str_info" 中
+荷兰搜索引擎，无追踪！
+
+```
+https://www.startpage.com/do/search?q=QUERY&cluster=web
+```
+
+### 2.4 必应英文（备用3）
+
+```
+https://www.bing.com/search?q=QUERY
+```
 
 ---
 
-## 1.6 备用源：必应中文
+## 3. 科技新闻：Hacker News
 
-搜狗也被拦截时使用。
-
-### 请求方式
+API 直接返回 JSON，最方便！
 
 ```
-web_fetch(url="https://cn.bing.com/search?q=QUERY", extractMode="text", maxChars=10000)
+https://hn.algolia.com/api/v1/search?query=QUERY&tags=story&hitsPerPage=10
 ```
-
-### 示例
-
-```
-web_fetch(url="https://cn.bing.com/search?q=半导体行业", extractMode="text", maxChars=10000)
-```
-
-### 特点
-
-- 反爬最少，最稳定
-- 结果质量高
-- 适合作为最后备用源
-
----
-
-## 2. 英文搜索：DuckDuckGo Lite
-
-### 请求方式
-
-```
-web_fetch(url="https://lite.duckduckgo.com/lite/?q=QUERY", extractMode="text", maxChars=8000)
-```
-
-### 示例
-
-```
-web_fetch(url="https://lite.duckduckgo.com/lite/?q=NVIDIA+latest+earnings", extractMode="text", maxChars=8000)
-web_fetch(url="https://lite.duckduckgo.com/lite/?q=AI+agents+2025", extractMode="text", maxChars=8000)
-```
-
-### 区域过滤
-
-添加 `&kl=REGION`：
-- `us-en` — 美国
-- `uk-en` — 英国
-- `hk-tzh` — 香港中文
-
----
-
-## 3. 科技新闻：Hacker News（强烈推荐！）
-
-### 请求方式
-
-```
-web_fetch(url="https://hn.algolia.com/api/v1/search?query=QUERY&tags=story&hitsPerPage=10", extractMode="text", maxChars=8000)
-```
-
-### 示例
-
-```
-web_fetch(url="https://hn.algolia.com/api/v1/search?query=OpenAI&tags=story&hitsPerPage=10", extractMode="text", maxChars=8000)
-web_fetch(url="https://hn.algolia.com/api/v1/search?query=LLM+agent&tags=story&hitsPerPage=10", extractMode="text", maxChars=8000)
-```
-
-### 解析结果
-
-返回 JSON 格式，结果在 `hits` 数组中。每条结果包含：
-- `title` — 文章标题
-- `url` — 原始链接
-- `points` — 点赞数
-- `author` — 作者
-- `created_at` — 发布时间
-- `num_comments` — 评论数
-
-### 使用场景
-
-- 搜最新 AI/科技趋势
-- 找热门开源项目
-- 了解程序员都在讨论什么
-- "最近 Hacker News 上关于 LLM 的讨论"
 
 ---
 
 ## 4. 社区讨论：Reddit
 
-### 请求方式
-
 ```
-web_fetch(url="https://www.reddit.com/search.json?q=QUERY&limit=10", extractMode="text", maxChars=8000)
+https://www.reddit.com/search.json?q=QUERY&limit=10
 ```
-
-### 示例
-
-```
-web_fetch(url="https://www.reddit.com/search.json?q=Python+async&limit=10", extractMode="text", maxChars=8000)
-web_fetch(url="https://www.reddit.com/search.json?q=machine+learning+tips&limit=10", extractMode="text", maxChars=8000)
-```
-
-### 解析结果
-
-返回 JSON，结果在 `data.children[].data` 中。包含：
-- `title` — 帖子标题
-- `url` — 链接
-- `score` —  upvotes
-- `num_comments` — 评论数
-- `subreddit` — 所属社区
-- `selftext` — 正文（如果有）
-
-### 使用场景
-
-- 找真实用户的产品评价
-- 搜教程、使用经验
-- "Reddit 上关于 XXX 的讨论"
 
 ---
 
 ## 5. 学术论文：ArXiv
 
-### 请求方式
-
 ```
-web_fetch(url="http://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5", extractMode="text", maxChars=5000)
-```
-
-### 示例
-
-```
-web_fetch(url="http://export.arxiv.org/api/query?search_query=all:large+language+model&max_results=5", extractMode="text", maxChars=5000)
-web_fetch(url="http://export.arxiv.org/api/query?search_query=all:diffusion+model&max_results=5", extractMode="text", maxChars=5000)
-```
-
-### 解析结果
-
-返回 XML 格式，每篇论文包含：
-- `<title>` — 论文标题
-- `<summary>` — 摘要
-- `<author>` — 作者
-- `<published>` — 发布日期
-- `<id>` — 论文 ID（可用于下载 PDF）
-
-### PDF 下载
-
-论文 PDF 地址格式：
-```
-https://arxiv.org/pdf/{arxiv_id}.pdf
-```
-
-例如：`https://arxiv.org/pdf/2310.12345.pdf`
-
-### 使用场景
-
-- 搜最新学术论文
-- 了解某技术领域的最新进展
-- "最近有什么关于 XXX 的论文"
-
----
-
-## 搜索策略建议
-
-### 根据查询选择引擎
-
-| 查询类型 | 推荐引擎 | 示例 |
-|---------|---------|------|
-| 中文资讯/新闻 | 360 搜索 | "光模块行业趋势"、"比亚迪最新消息" |
-| 英文技术新闻 | Hacker News | "LLM 推理优化"、"AI agent 框架" |
-| 产品评价/讨论 | Reddit | "iPhone 16 评测"、"Python 异步教程" |
-| 学术研究 | ArXiv | "transformer 架构"、"扩散模型最新论文" |
-| 通用英文搜索 | DDG Lite | "how to use OpenAI API" |
-
-### 组合搜索策略
-
-对于重要问题，可以组合多个引擎：
-
-1. **全面调研**：360 搜索（中文）+ Hacker News（英文科技）
-2. **产品选择**：Reddit（真实评价）+ DDG（技术规格）
-3. **技术学习**：ArXiv（论文）+ Hacker News（社区讨论）
-
----
-
-## 搜索-抓取模式 (Search → Fetch)
-
-搜索只返回摘要。完整内容需要二次抓取：
-
-1. **搜索** — 获取结果列表和 URLs
-2. **筛选** — 挑出最相关的 2-3 个 URL
-3. **抓取** — 用 `web_fetch(url="URL", extractMode="markdown")` 获取全文
-
-### 示例
-
-```
-# 搜 Hacker News 上关于 AI agent 的讨论
-web_fetch(url="https://hn.algolia.com/api/v1/search?query=AI+agent&tags=story&hitsPerPage=5", extractMode="text", maxChars=8000)
-
-# 抓取排名第一的文章全文
-web_fetch(url="https://example.com/article", extractMode="markdown", maxChars=20000)
+http://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5
 ```
 
 ---
 
-## 不可用的搜索引擎
+## 使用示例
 
-| 引擎 | 原因 |
+### 搜"A股产业链梳理"
+
+```
+# 中文 - 360
+web_fetch(url="https://m.so.com/s?q=A股产业链梳理", extractMode="text", maxChars=12000)
+
+# 被限 → 搜狗
+web_fetch(url="https://www.sogou.com/web?query=A股产业链梳理", extractMode="text", maxChars=10000)
+
+# 再被限 → 必应
+web_fetch(url="https://cn.bing.com/search?q=A股产业链梳理", extractMode="text", maxChars=10000)
+```
+
+### 搜英文科技新闻
+
+```
+# DDG
+web_fetch(url="https://lite.duckduckgo.com/lite/?q=semiconductor+industry", extractMode="text", maxChars=8000)
+
+# 被限 → Qwant
+web_fetch(url="https://www.qwant.com/?q=semiconductor+industry&t=web", extractMode="text", maxChars=10000)
+```
+
+---
+
+## 为什么加 Qwant 和 Startpage？
+
+| 引擎 | 优势 |
 |------|------|
-| 百度 | 安全验证/验证码拦截 |
-| Google | captcha 人机验证 |
-| 搜狗 | 中文编码问题 |
-| 头条搜索 | 需要 JS 渲染 |
+| **Qwant** | 欧洲最大隐私搜索引擎，无追踪，无需 API |
+| **Startpage** | 荷兰引擎，Google 结果但无追踪 |
+| **必应** | 微软背书，结果准，反爬最松 |
+
+这三个都是**不需要 API Key** 的免费引擎，适合作为英文搜索的备用！
 
 ---
 
-## Tips
+## 搜索技巧
 
-- 360 搜索：`maxChars=12000` → 约 8-10 条
-- DDG：`maxChars=8000` → 约 10 条
-- Hacker News：`hitsPerPage=10` → 最多 10 条
-- Reddit：`limit=10` → 最多 10 条
-- ArXiv：`max_results=5` → 最多 5 篇
-
-### 搜索技巧
-
-- 精确短语用引号：`q=%22深度学习%22`
-- 加限定词：`Python 教程 2025`
-- Hacker News 加 tags：`tags=story` 或 `tags=ask_hn`
-- ArXiv 搜特定领域：`search_query=cat:cs.AI`（cs.AI 是 AI 分类）
+- 精确短语：`q=%22深度学习%22`
+- 加年份：`Python 教程 2025`
+- HN 加 tags：`tags=story` 或 `tags=ask_hn`
+- ArXiv 搜分类：`search_query=cat:cs.AI`
 
 ---
 
-## 局限性
+## 更新日志
 
-- 无法按时间范围过滤（360/DDG）
-- 纯文本结果，无图片/视频
-- 偶发限速，等几秒重试
-- Reddit 需要处理 JSON 解析
+### v0.4.0
+- ✅ 增加 Qwant 搜索（欧洲隐私引擎）
+- ✅ 增加 Startpage 搜索（荷兰无追踪）
+- ✅ 增加必应英文作为备用
+- ✅ 优化英文搜索备用链
+
+### v0.3.0
+- ✅ 防封策略 + 搜狗 + 必应中文
+
+### v0.2.0
+- ✅ HN + Reddit + ArXiv
