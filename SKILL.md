@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.6.0
-description: 中文网页搜索 - 聚合 12+ 搜索引擎，无需 API Key
+version: 0.7.0
+description: 中文网页搜索 - 聚合 13+ 搜索引擎，无需 API Key，包含公众号文章搜索
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -9,6 +9,8 @@ license: MIT
 tags:
   - search
   - chinese
+  - wechat
+  - 公众号
   - web-search
   - 360-search
   - sogou
@@ -27,7 +29,6 @@ tags:
   - free
   - 中文搜索
   - 学术搜索
-  - 防封
 ---
 
 # 中文网页搜索 (CN Web Search)
@@ -257,6 +258,58 @@ https://www.wolframalpha.com/input?i=integral+of+x^2+dx
 - 查询统计数据（人口、GDP等）
 - 科学知识问答
 - 单位转换
+
+---
+
+## 11. 公众号文章：搜狗微信（强烈推荐！）
+
+微信公众号文章搜索最稳定的免费源！
+
+```
+https://weixin.sogou.com/weixin?type=2&query=QUERY&page=1
+```
+
+### 示例
+
+```
+https://weixin.sogou.com/weixin?type=2&query=英伟达&page=1
+https://weixin.sogou.com/weixin?type=2&query=半导体&page=1
+```
+
+### 解析
+
+- 标题在 `<h3>` 标签中
+- 需要处理 GBK 编码（转换 UTF-8）
+- 提取标题、URL、摘要
+- 建议翻页获取更多结果
+
+### 技巧
+
+- 换页：`&page=2`、`&page=3`
+- 精准匹配：`query=关键词+site:具体公众号名`
+
+---
+
+## 12. 公众号文章：必应索引
+
+作为搜狗的补充，通过必应直接搜公众号文章！
+
+```
+https://cn.bing.com/search?q=site:mp.weixin.qq.com+QUERY
+```
+
+### 示例
+
+```
+https://cn.bing.com/search?q=site:mp.weixin.qq.com+英伟达
+https://www.bing.com/search?q=site:mp.weixin.qq.com+AI+行业
+```
+
+### 特点
+
+- 搜狗被限时的好选择
+- 偶尔能搜到搜狗没收录的文章
+- 结果按相关性排序
 
 ---
 
