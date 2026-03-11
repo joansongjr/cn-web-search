@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.5.0
-description: 中文网页搜索 - 聚合 10+ 搜索引擎，无需 API Key
+version: 0.6.0
+description: 中文网页搜索 - 聚合 12+ 搜索引擎，无需 API Key
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -21,6 +21,8 @@ tags:
   - arxiv
   - stackoverflow
   - github
+  - caixin
+  - wolfram
   - no-api-key
   - free
   - 中文搜索
@@ -49,6 +51,8 @@ tags:
 | **科技** | Hacker News | 专用 | API 直接返回 JSON |
 | **社区** | Reddit | 专用 | 真实用户讨论 |
 | **学术** | ArXiv | 专用 | 免费论文 |
+| **深度报道** | 财新 | 专用 | 高质量财经 ⭐ |
+| **知识问答** | Wolfram Alpha | 专用 | factual 查询 ⭐ |
 
 ## 防封策略
 
@@ -205,6 +209,54 @@ https://search.eastmoney.com/search?keyword=QUERY
 ```
 
 或用 360 搜索 + 限定"site:eastmoney.com"
+
+---
+
+## 9. 深度报道：财新
+
+高质量财经深度报道，会员内容居多但标题和摘要可读。
+
+```
+https://search.caixin.com/search/?keyword=QUERY
+```
+
+### 示例
+
+```
+https://search.caixin.com/search/?keyword=英伟达
+https://search.caixin.com/search/?keyword=半导体
+```
+
+### 特点
+
+- 深度报道为主
+- 标题和摘要质量高
+- 适合了解事件背景和深度分析
+
+---
+
+## 10. 知识问答：Wolfram Alpha
+
+factual 查询，计算、统计、知识问答神器！
+
+```
+https://www.wolframalpha.com/input?i=QUERY
+```
+
+### 示例
+
+```
+https://www.wolframalpha.com/input?i=GDP+of+China
+https://www.wolframalpha.com/input?i=population+of+Tokyo
+https://www.wolframalpha.com/input?i=integral+of+x^2+dx
+```
+
+### 用途
+
+- 计算数学题
+- 查询统计数据（人口、GDP等）
+- 科学知识问答
+- 单位转换
 
 ---
 

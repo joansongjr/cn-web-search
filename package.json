@@ -1,6 +1,6 @@
 {
   "name": "cn-web-search",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "中文网页搜索 - 聚合360搜索+DuckDuckGo，无需API Key",
   "author": "joansongjr",
   "license": "MIT",
