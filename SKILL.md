@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.4.0
-description: 中文网页搜索 - 聚合 360 + 搜狗 + 必应 + Qwant + Startpage + DuckDuckGo + Hacker News + Reddit + ArXiv，无需 API Key
+version: 0.5.0
+description: 中文网页搜索 - 聚合 10+ 搜索引擎，无需 API Key
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -19,6 +19,8 @@ tags:
   - hacker-news
   - reddit
   - arxiv
+  - stackoverflow
+  - github
   - no-api-key
   - free
   - 中文搜索
@@ -37,10 +39,13 @@ tags:
 | **中文主引擎** | 360 搜索 | 主 | 可能被限 |
 | **中文备用** | 搜狗网页 | 备用1 | 360 被限时用 |
 | **中文备用** | 必应中文 | 备用2 | 最稳定 |
+| **中文投资** | 东方财富 | 专用 | A股/基金 |
 | **英文主引擎** | DuckDuckGo Lite | 主 | 零反爬 |
 | **英文备用** | Qwant | 备用1 | 欧洲隐私引擎 |
 | **英文备用** | Startpage | 备用2 | 荷兰引擎 |
 | **英文备用** | 必应英文 | 备用3 | 最后防线 |
+| **技术问答** | Stack Overflow | 专用 | 程序员必备 ⭐ |
+| **热门项目** | GitHub Trending | 专用 | 开源项目 ⭐ |
 | **科技** | Hacker News | 专用 | API 直接返回 JSON |
 | **社区** | Reddit | 专用 | 真实用户讨论 |
 | **学术** | ArXiv | 专用 | 免费论文 |
@@ -137,6 +142,69 @@ https://www.reddit.com/search.json?q=QUERY&limit=10
 ```
 http://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5
 ```
+
+---
+
+## 6. 技术问答：Stack Overflow（强烈推荐！）
+
+程序员必备！直接搜技术问题解决方案。
+
+```
+https://stackoverflow.com/search?q=QUERY
+```
+
+### 示例
+
+```
+https://stackoverflow.com/search?q=python+asyncio+timeout
+https://stackoverflow.com/search?q=javascript+async+await+error
+```
+
+### 解析
+
+- 标题在 `<h3>` 中
+- 搜索结果页直接显示投票数和回答数
+- 最佳答案有 "Accepted" 标记
+
+---
+
+## 7. 热门项目：GitHub Trending
+
+找开源项目、热门代码。
+
+```
+https://github.com/trending?since=weekly
+```
+
+### 参数
+
+- `since=daily` — 今日
+- `since=weekly` — 本周（默认）
+- `since=monthly` — 本月
+- `lang=python` — 按语言筛选
+
+### 示例
+
+```
+https://github.com/trending?since=weekly&lang=python
+https://github.com/trending?since=weekly&lang=javascript
+```
+
+### 解析
+
+- 项目名在 `<h3>` 中
+- 包含 star 数、fork 数、描述
+- 适合找最新流行的开源项目
+
+---
+
+## 8. 中文投资：东方财富（同花顺）
+
+```
+https://search.eastmoney.com/search?keyword=QUERY
+```
+
+或用 360 搜索 + 限定"site:eastmoney.com"
 
 ---
 
