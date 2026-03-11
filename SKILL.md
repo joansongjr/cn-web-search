@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.7.0
-description: 中文网页搜索 - 聚合 13+ 搜索引擎，无需 API Key，包含公众号文章搜索
+version: 0.8.0
+description: 中文网页搜索 - 聚合 14+ 搜索引擎，免费+付费混合，包含公众号文章搜索
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -25,6 +25,7 @@ tags:
   - github
   - caixin
   - wolfram
+  - tavily
   - no-api-key
   - free
   - 中文搜索
@@ -33,58 +34,75 @@ tags:
 
 # 中文网页搜索 (CN Web Search)
 
-多引擎聚合搜索，零配置，无需 API Key。**8+ 搜索引擎**，中文/英文/科技/学术全覆盖。
+多引擎聚合搜索，**免费+付费混合**。零配置，默认无需 API Key。
 
-## 搜索引擎总览
+## 引擎分类
 
-| 类别 | 引擎 | 状态 | 说明 |
-|------|------|------|------|
-| **中文主引擎** | 360 搜索 | 主 | 可能被限 |
-| **中文备用** | 搜狗网页 | 备用1 | 360 被限时用 |
-| **中文备用** | 必应中文 | 备用2 | 最稳定 |
-| **中文投资** | 东方财富 | 专用 | A股/基金 |
-| **英文主引擎** | DuckDuckGo Lite | 主 | 零反爬 |
-| **英文备用** | Qwant | 备用1 | 欧洲隐私引擎 |
-| **英文备用** | Startpage | 备用2 | 荷兰引擎 |
-| **英文备用** | 必应英文 | 备用3 | 最后防线 |
-| **技术问答** | Stack Overflow | 专用 | 程序员必备 ⭐ |
-| **热门项目** | GitHub Trending | 专用 | 开源项目 ⭐ |
-| **科技** | Hacker News | 专用 | API 直接返回 JSON |
-| **社区** | Reddit | 专用 | 真实用户讨论 |
-| **学术** | ArXiv | 专用 | 免费论文 |
-| **深度报道** | 财新 | 专用 | 高质量财经 ⭐ |
-| **知识问答** | Wolfram Alpha | 专用 | factual 查询 ⭐ |
+### 免费引擎（无需配置）
 
-## 防封策略
+| 类别 | 引擎 | 说明 |
+|------|------|------|
+| 中文 | 360/搜狗/必应 | 主+备用 |
+| 公众号 | 搜狗微信/必应索引 | ⭐ |
+| 英文 | DDG/Qwant/Startpage/必应 | 主+备用 |
+| 技术 | Stack Overflow/GitHub Trending | ⭐ |
+| 专用 | Hacker News/Reddit/ArXiv | API |
+| 投资 | 东方财富 | A股 |
+| 深度 | 财新 | 财经 |
+| 知识 | Wolfram Alpha | 计算 |
 
-### 请求间隔
-- 每次搜索后 **等待 3-5 秒**
-- 连续请求不超过 3 次
-- 超过后等待 30 秒
+### 付费引擎（需要 API Key）
 
-### 备用切换逻辑
-```
-中文: 360 → 搜狗 → 必应
-英文: DDG → Qwant → Startpage → 必应
-```
+| 引擎 | 要求 | 说明 |
+|------|------|------|
+| **Tavily** | `TAVILY_API_KEY` | 免费 1000次/月 ⭐ |
 
 ---
 
-## 1. 中文搜索
+## 1. Tavily 搜索（需要 API Key）
 
-### 1.1 360 搜索（主）
+### 注册获取 Key
+
+1. 访问 https://tavily.com 注册免费账号
+2. 登录后进入 Dashboard，获取 API Key
+3. 设置环境变量：`export TAVILY_API_KEY=你的Key`
+
+### 使用方式
+
+```
+web_fetch(url="https://api.tavily.com/search?api_key=$TAVILY_API_KEY&q=QUERY", extractMode="text", maxChars=10000)
+```
+
+### 示例
+
+```
+web_fetch(url="https://api.tavily.com/search?api_key=$TAVILY_API_KEY&q=NVIDIA+earnings&max_results=10", extractMode="text", maxChars=10000)
+```
+
+### 特点
+
+- **免费额度**：1000 次/月（足够个人使用）
+- **结果质量高**：AI 优化的搜索结果
+- **支持领域过滤**：include_domains、exclude_domains
+- **适合**：需要高质量英文搜索结果时
+
+---
+
+## 2. 免费中文搜索
+
+### 2.1 360 搜索（主）
 
 ```
 https://m.so.com/s?q=QUERY
 ```
 
-### 1.2 搜狗网页（备用1）
+### 2.2 搜狗网页（备用1）
 
 ```
 https://www.sogou.com/web?query=QUERY
 ```
 
-### 1.3 必应中文（备用2）
+### 2.3 必应中文（备用2）
 
 ```
 https://cn.bing.com/search?q=QUERY
@@ -92,31 +110,27 @@ https://cn.bing.com/search?q=QUERY
 
 ---
 
-## 2. 英文搜索
+## 3. 免费英文搜索
 
-### 2.1 DuckDuckGo Lite（主）
+### 3.1 DuckDuckGo Lite（主）
 
 ```
 https://lite.duckduckgo.com/lite/?q=QUERY
 ```
 
-### 2.2 Qwant（备用1）⭐ 新增
-
-欧洲隐私搜索引擎，无需 API，完全免费！
+### 3.2 Qwant
 
 ```
 https://www.qwant.com/?q=QUERY&t=web
 ```
 
-### 2.3 Startpage（备用2）⭐ 新增
-
-荷兰搜索引擎，无追踪！
+### 3.3 Startpage
 
 ```
 https://www.startpage.com/do/search?q=QUERY&cluster=web
 ```
 
-### 2.4 必应英文（备用3）
+### 3.4 必应英文
 
 ```
 https://www.bing.com/search?q=QUERY
@@ -124,253 +138,112 @@ https://www.bing.com/search?q=QUERY
 
 ---
 
-## 3. 科技新闻：Hacker News
+## 4. 公众号搜索
 
-API 直接返回 JSON，最方便！
-
-```
-https://hn.algolia.com/api/v1/search?query=QUERY&tags=story&hitsPerPage=10
-```
-
----
-
-## 4. 社区讨论：Reddit
-
-```
-https://www.reddit.com/search.json?q=QUERY&limit=10
-```
-
----
-
-## 5. 学术论文：ArXiv
-
-```
-http://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5
-```
-
----
-
-## 6. 技术问答：Stack Overflow（强烈推荐！）
-
-程序员必备！直接搜技术问题解决方案。
-
-```
-https://stackoverflow.com/search?q=QUERY
-```
-
-### 示例
-
-```
-https://stackoverflow.com/search?q=python+asyncio+timeout
-https://stackoverflow.com/search?q=javascript+async+await+error
-```
-
-### 解析
-
-- 标题在 `<h3>` 中
-- 搜索结果页直接显示投票数和回答数
-- 最佳答案有 "Accepted" 标记
-
----
-
-## 7. 热门项目：GitHub Trending
-
-找开源项目、热门代码。
-
-```
-https://github.com/trending?since=weekly
-```
-
-### 参数
-
-- `since=daily` — 今日
-- `since=weekly` — 本周（默认）
-- `since=monthly` — 本月
-- `lang=python` — 按语言筛选
-
-### 示例
-
-```
-https://github.com/trending?since=weekly&lang=python
-https://github.com/trending?since=weekly&lang=javascript
-```
-
-### 解析
-
-- 项目名在 `<h3>` 中
-- 包含 star 数、fork 数、描述
-- 适合找最新流行的开源项目
-
----
-
-## 8. 中文投资：东方财富（同花顺）
-
-```
-https://search.eastmoney.com/search?keyword=QUERY
-```
-
-或用 360 搜索 + 限定"site:eastmoney.com"
-
----
-
-## 9. 深度报道：财新
-
-高质量财经深度报道，会员内容居多但标题和摘要可读。
-
-```
-https://search.caixin.com/search/?keyword=QUERY
-```
-
-### 示例
-
-```
-https://search.caixin.com/search/?keyword=英伟达
-https://search.caixin.com/search/?keyword=半导体
-```
-
-### 特点
-
-- 深度报道为主
-- 标题和摘要质量高
-- 适合了解事件背景和深度分析
-
----
-
-## 10. 知识问答：Wolfram Alpha
-
-factual 查询，计算、统计、知识问答神器！
-
-```
-https://www.wolframalpha.com/input?i=QUERY
-```
-
-### 示例
-
-```
-https://www.wolframalpha.com/input?i=GDP+of+China
-https://www.wolframalpha.com/input?i=population+of+Tokyo
-https://www.wolframalpha.com/input?i=integral+of+x^2+dx
-```
-
-### 用途
-
-- 计算数学题
-- 查询统计数据（人口、GDP等）
-- 科学知识问答
-- 单位转换
-
----
-
-## 11. 公众号文章：搜狗微信（强烈推荐！）
-
-微信公众号文章搜索最稳定的免费源！
+### 4.1 搜狗微信
 
 ```
 https://weixin.sogou.com/weixin?type=2&query=QUERY&page=1
 ```
 
-### 示例
-
-```
-https://weixin.sogou.com/weixin?type=2&query=英伟达&page=1
-https://weixin.sogou.com/weixin?type=2&query=半导体&page=1
-```
-
-### 解析
-
-- 标题在 `<h3>` 标签中
-- 需要处理 GBK 编码（转换 UTF-8）
-- 提取标题、URL、摘要
-- 建议翻页获取更多结果
-
-### 技巧
-
-- 换页：`&page=2`、`&page=3`
-- 精准匹配：`query=关键词+site:具体公众号名`
-
----
-
-## 12. 公众号文章：必应索引
-
-作为搜狗的补充，通过必应直接搜公众号文章！
+### 4.2 必应公众号索引
 
 ```
 https://cn.bing.com/search?q=site:mp.weixin.qq.com+QUERY
 ```
 
-### 示例
+---
+
+## 5. 技术/社区/学术
+
+### 5.1 Hacker News
 
 ```
-https://cn.bing.com/search?q=site:mp.weixin.qq.com+英伟达
-https://www.bing.com/search?q=site:mp.weixin.qq.com+AI+行业
+https://hn.algolia.com/api/v1/search?query=QUERY&tags=story&hitsPerPage=10
 ```
 
-### 特点
+### 5.2 Reddit
 
-- 搜狗被限时的好选择
-- 偶尔能搜到搜狗没收录的文章
-- 结果按相关性排序
+```
+https://www.reddit.com/search.json?q=QUERY&limit=10
+```
+
+### 5.3 ArXiv
+
+```
+http://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5
+```
+
+### 5.4 Stack Overflow
+
+```
+https://stackoverflow.com/search?q=QUERY
+```
+
+### 5.5 GitHub Trending
+
+```
+https://github.com/trending?since=weekly
+```
+
+---
+
+## 6. 其他专用
+
+### 6.1 东方财富（投资）
+
+```
+https://search.eastmoney.com/search?keyword=QUERY
+```
+
+### 6.2 财新（深度报道）
+
+```
+https://search.caixin.com/search/?keyword=QUERY
+```
+
+### 6.3 Wolfram Alpha（知识问答）
+
+```
+https://www.wolframalpha.com/input?i=QUERY
+```
 
 ---
 
 ## 使用示例
 
-### 搜"A股产业链梳理"
+### 免费搜索
 
 ```
-# 中文 - 360
-web_fetch(url="https://m.so.com/s?q=A股产业链梳理", extractMode="text", maxChars=12000)
-
-# 被限 → 搜狗
-web_fetch(url="https://www.sogou.com/web?query=A股产业链梳理", extractMode="text", maxChars=10000)
-
-# 再被限 → 必应
-web_fetch(url="https://cn.bing.com/search?q=A股产业链梳理", extractMode="text", maxChars=10000)
+web_fetch(url="https://m.so.com/s?q=英伟达财报", extractMode="text", maxChars=12000)
+web_fetch(url="https://lite.duckduckgo.com/lite/?q=AI+news", extractMode="text", maxChars=8000)
 ```
 
-### 搜英文科技新闻
+### Tavily 搜索（需要 Key）
 
 ```
-# DDG
-web_fetch(url="https://lite.duckduckgo.com/lite/?q=semiconductor+industry", extractMode="text", maxChars=8000)
+# 先设置环境变量
+export TAVILY_API_KEY=你的Key
 
-# 被限 → Qwant
-web_fetch(url="https://www.qwant.com/?q=semiconductor+industry&t=web", extractMode="text", maxChars=10000)
+# 然后调用
+web_fetch(url="https://api.tavily.com/search?api_key=$TAVILY_API_KEY&q=semiconductor+industry&max_results=10", extractMode="text", maxChars=10000)
 ```
-
----
-
-## 为什么加 Qwant 和 Startpage？
-
-| 引擎 | 优势 |
-|------|------|
-| **Qwant** | 欧洲最大隐私搜索引擎，无追踪，无需 API |
-| **Startpage** | 荷兰引擎，Google 结果但无追踪 |
-| **必应** | 微软背书，结果准，反爬最松 |
-
-这三个都是**不需要 API Key** 的免费引擎，适合作为英文搜索的备用！
-
----
-
-## 搜索技巧
-
-- 精确短语：`q=%22深度学习%22`
-- 加年份：`Python 教程 2025`
-- HN 加 tags：`tags=story` 或 `tags=ask_hn`
-- ArXiv 搜分类：`search_query=cat:cs.AI`
 
 ---
 
 ## 更新日志
 
+### v0.8.0
+- ✅ 增加 Tavily（付费引擎，需要 API Key，免费 1000次/月）
+
+### v0.7.0
+- ✅ 搜狗微信 + 必应公众号索引
+
+### v0.6.0
+- ✅ 财新 + Wolfram Alpha
+
+### v0.5.0
+- ✅ Stack Overflow + GitHub Trending + 东方财富
+
 ### v0.4.0
-- ✅ 增加 Qwant 搜索（欧洲隐私引擎）
-- ✅ 增加 Startpage 搜索（荷兰无追踪）
-- ✅ 增加必应英文作为备用
-- ✅ 优化英文搜索备用链
-
-### v0.3.0
-- ✅ 防封策略 + 搜狗 + 必应中文
-
-### v0.2.0
-- ✅ HN + Reddit + ArXiv
+- ✅ Qwant + Startpage
