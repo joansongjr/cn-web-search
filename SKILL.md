@@ -1,7 +1,7 @@
 ---
 name: cn-web-search
-version: 0.2.0
-description: 中文网页搜索 - 聚合 360 搜索 + DuckDuckGo + Hacker News + Reddit + ArXiv，无需 API Key
+version: 0.3.0
+description: 中文网页搜索 - 聚合 360 搜索 + 搜狗 + 必应 + DuckDuckGo + Hacker News + Reddit + ArXiv，无需 API Key，防封策略
 author: joansongjr
 author_url: https://github.com/joansongjr
 repository: https://github.com/joansongjr/cn-web-search
@@ -11,6 +11,8 @@ tags:
   - chinese
   - web-search
   - 360-search
+  - sogou
+  - bing
   - duckduckgo
   - hacker-news
   - reddit
@@ -19,25 +21,50 @@ tags:
   - free
   - 中文搜索
   - 学术搜索
+  - 防封
 ---
 
 # 中文网页搜索 (CN Web Search)
 
-多引擎聚合搜索，零配置，无需 API Key。自动根据查询类型选择最适合的搜索引擎。
+多引擎聚合搜索，零配置，无需 API Key。**内置防封策略 + 备用源**，中文搜索更稳定。
 
 ## 搜索引擎选择策略
 
-| 查询类型 | 搜索引擎 | 原因 |
-|---------|---------|------|
-| **中文内容** | 360 搜索移动版 | 中文内容质量最好，无反爬 |
-| **英文内容** | DuckDuckGo Lite | 纯 HTML，零反爬，Bing 索引 |
-| **科技新闻/趋势** | Hacker News | 高质量科技讨论，AI/编程/Startup 必看 |
-| **社区讨论** | Reddit | 全球最大社区，真实用户观点 |
-| **学术论文** | ArXiv | 免费获取全球最新 AI/ML/物理等论文 |
+| 查询类型 | 主引擎 | 备用引擎 | 原因 |
+|---------|-------|---------|------|
+| **中文内容** | 360 搜索移动版 | 搜狗网页 + 必应中文 | 主引擎被限时自动切换 |
+| **英文内容** | DuckDuckGo Lite | 必应英文 | 纯 HTML，零反爬 |
+| **科技新闻** | Hacker News | — | 高质量科技讨论 |
+| **社区讨论** | Reddit | — | 全球最大社区 |
+| **学术论文** | ArXiv | — | 免费学术论文 |
+
+## 防封策略（重要！）
+
+### 1. 请求间隔
+- **每次搜索后等待 3-5 秒**再发下一个请求
+- 连续请求不超过 3 次
+- 超过后等待 30 秒再继续
+
+### 2. 备用源切换
+当主引擎返回验证码或被拦截时，**自动切换备用引擎**：
+
+```
+主引擎: 360 搜索移动版 (m.so.com)
+    ↓ 被拦截
+备用1: 搜狗网页搜索 (sogou.com/web)
+    ↓ 被拦截  
+备用2: 必应中文 (cn.bing.com)
+```
+
+### 3. User-Agent
+使用移动版页面（更容易通过）：
+- 360 移动版：`https://m.so.com/...` 
+- 搜狗移动版
+- 必应桌面版反爬较少
 
 ---
 
-## 1. 中文搜索：360 搜索
+## 1. 中文搜索：360 搜索（主引擎）
 
 ### 请求方式
 
@@ -60,6 +87,54 @@ web_fetch(url="https://m.so.com/s?q=光模块行业趋势", extractMode="text", 
 - **来源和日期** — 如 "新浪财经 2025年11月20日"
 
 提取前 5-10 条，跳过广告和推荐卡片。
+
+---
+
+## 1.5 备用源：搜狗网页搜索
+
+当 360 被拦截时使用。
+
+### 请求方式
+
+```
+web_fetch(url="https://www.sogou.com/web?query=QUERY", extractMode="text", maxChars=10000)
+```
+
+### 示例
+
+```
+web_fetch(url="https://www.sogou.com/web?query=英伟达财报", extractMode="text", maxChars=10000)
+```
+
+### 解析结果
+
+- 标题在 `<h3 class="vrwrap">` 或 `<h3>` 中
+- 摘要在前几行
+- 来源在 class="str_info" 中
+
+---
+
+## 1.6 备用源：必应中文
+
+搜狗也被拦截时使用。
+
+### 请求方式
+
+```
+web_fetch(url="https://cn.bing.com/search?q=QUERY", extractMode="text", maxChars=10000)
+```
+
+### 示例
+
+```
+web_fetch(url="https://cn.bing.com/search?q=半导体行业", extractMode="text", maxChars=10000)
+```
+
+### 特点
+
+- 反爬最少，最稳定
+- 结果质量高
+- 适合作为最后备用源
 
 ---
 
