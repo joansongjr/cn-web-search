@@ -1,6 +1,6 @@
 ---
 name: cn-web-search
-version: 2.1.0
+version: 2.2.0
 description: 中文网页搜索 - 聚合 17 个免费搜索引擎，无需 API Key，纯网页抓取，支持公众号/财经/技术/学术/知识搜索。
 author: joansongjr
 author_url: https://github.com/joansongjr
@@ -273,7 +273,58 @@ web_fetch(url="https://www.jisilu.cn/explore/?keyword=可转债", extractMode="t
 
 ---
 
+## 实战对比：有 cn-web-search vs 没有
+
+> 以投研场景为例，问同一个问题：**"英伟达2026年Q1财报业绩如何？"**
+
+### ❌ 没有 cn-web-search（纯模型）
+
+```
+回答："我的训练数据有截止日期，无法提供最新财报数据。
+      建议您查看英伟达官网 investor.nvidia.com。"
+```
+
+**结果：什么有用信息都拿不到。**
+
+### ✅ 装了 cn-web-search（百度 + 360 + 搜狗，3 个免费引擎）
+
+```python
+web_fetch(url="https://www.baidu.com/s?wd=英伟达2027财年Q1业绩指引", extractMode="text", maxChars=3000)
+web_fetch(url="https://m.so.com/s?q=英伟达2026财报Q1业绩", extractMode="text", maxChars=3000)
+web_fetch(url="https://www.sogou.com/web?query=英伟达财报2026Q1业绩预测", extractMode="text", maxChars=3000)
+```
+
+**拿到的实时数据（多源交叉验证）：**
+
+| 数据点 | 百度 | 360 | 搜狗 |
+|--------|:----:|:---:|:----:|
+| FY2026 Q1 营收 441 亿美元 (+69%) | ✅ | ✅ | ✅ |
+| FY2026 Q4 营收 681 亿美元 (+73%) | ✅ | ✅ | ✅ |
+| FY2026 全年营收 2159 亿美元 (+65%) | ✅ | ✅ | ✅ |
+| FY2027 Q1 指引 780 亿（超预期 7%） | ✅ | ✅ | ✅ |
+| H20 禁令影响 80 亿美元 | ✅ | ✅ | ✅ |
+| 毛利率 75% | ✅ | ✅ | — |
+| 黄仁勋："代理式 AI 拐点已到来" | ✅ | — | ✅ |
+
+### 对比总结
+
+| 维度 | 无 Skill | cn-web-search |
+|------|:--------:|:-------------:|
+| 实时数据 | ❌ | ✅ |
+| 数据准确性 | N/A | ✅ 多源交叉验证 |
+| 成本 | — | 免费 |
+| 投研可用性 | 零 | 营收/利润/指引/管理层表态 |
+| 信息来源 | 无 | 百度+360+搜狗+雪球+东方财富 |
+
+> **结论：没有 cn-web-search 的 agent 在投研场景下基本是废的。装上后等于给 agent 开了一扇窗，能看到实时世界——而且完全免费。**
+
+---
+
 ## 更新日志
+
+### v2.2.0
+- 📊 新增「实战对比」章节：有 cn-web-search vs 没有（以英伟达财报投研为例）
+- 📈 展示多源交叉验证效果
 
 ### v2.1.0
 - 🗑️ 移除所有 API 端点引擎（Hacker News、Reddit、ArXiv、DDG API、Wolfram Alpha）
