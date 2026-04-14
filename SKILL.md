@@ -1,6 +1,6 @@
 ---
 name: cn-web-search
-version: 2.2.0
+version: 2.3.0
 description: 中文网页搜索 - 聚合 17 个免费搜索引擎，无需 API Key，纯网页抓取，支持公众号/财经/技术/学术/知识搜索。
 author: joansongjr
 author_url: https://github.com/joansongjr
@@ -72,15 +72,11 @@ tags:
 
 ### 1.1 搜狗微信
 
-```
-https://weixin.sogou.com/weixin?type=2&query=QUERY&page=1
-```
+`https://weixin.sogou.com/weixin?type=2&query=QUERY&page=1`
 
 ### 1.2 必应公众号索引
 
-```
-https://cn.bing.com/search?q=site:mp.weixin.qq.com+QUERY
-```
+`https://cn.bing.com/search?q=site:mp.weixin.qq.com+QUERY`
 
 ---
 
@@ -88,35 +84,25 @@ https://cn.bing.com/search?q=site:mp.weixin.qq.com+QUERY
 
 ### 2.1 360 搜索
 
-```
-https://m.so.com/s?q=QUERY
-```
+`https://m.so.com/s?q=QUERY`
 
 ### 2.2 搜狗网页
 
-```
-https://www.sogou.com/web?query=QUERY
-```
+`https://www.sogou.com/web?query=QUERY`
 
 ### 2.3 必应中文
 
-```
-https://cn.bing.com/search?q=QUERY
-```
+`https://cn.bing.com/search?q=QUERY`
 
 ### 2.4 百度
 
-```
-https://www.baidu.com/s?wd=QUERY
-```
+`https://www.baidu.com/s?wd=QUERY`
 
 中文搜索覆盖最全，结果丰富。
 
 ### 2.5 头条搜索
 
-```
-https://so.toutiao.com/search?keyword=QUERY
-```
+`https://so.toutiao.com/search?keyword=QUERY`
 
 字节跳动旗下，中文资讯和短视频内容强。
 
@@ -126,49 +112,35 @@ https://so.toutiao.com/search?keyword=QUERY
 
 ### 3.1 DuckDuckGo Lite
 
-```
-https://lite.duckduckgo.com/lite/?q=QUERY
-```
+`https://lite.duckduckgo.com/lite/?q=QUERY`
 
 ### 3.2 Qwant
 
-```
-https://www.qwant.com/?q=QUERY&t=web
-```
+`https://www.qwant.com/?q=QUERY&t=web`
 
 ### 3.3 Startpage
 
-```
-https://www.startpage.com/do/search?q=QUERY&cluster=web
-```
+`https://www.startpage.com/do/search?q=QUERY&cluster=web`
 
 ### 3.4 必应英文
 
-```
-https://www.bing.com/search?q=QUERY
-```
+`https://www.bing.com/search?q=QUERY`
 
 ### 3.5 Yahoo
 
-```
-https://search.yahoo.com/search?p=QUERY
-```
+`https://search.yahoo.com/search?p=QUERY`
 
 老牌英文搜索引擎，结果稳定。
 
 ### 3.6 Brave Search
 
-```
-https://search.brave.com/search?q=QUERY
-```
+`https://search.brave.com/search?q=QUERY`
 
 独立索引（非 Bing/Google 代理），隐私友好，结果质量高。
 
 ### 3.7 Mojeek
 
-```
-https://www.mojeek.com/search?q=QUERY
-```
+`https://www.mojeek.com/search?q=QUERY`
 
 独立爬虫索引，不依赖任何大厂，适合多样化结果。
 
@@ -178,15 +150,11 @@ https://www.mojeek.com/search?q=QUERY
 
 ### 4.1 Stack Overflow
 
-```
-https://stackoverflow.com/search?q=QUERY
-```
+`https://stackoverflow.com/search?q=QUERY`
 
 ### 4.2 GitHub Trending
 
-```
-https://github.com/trending?since=weekly
-```
+`https://github.com/trending?since=weekly`
 
 ---
 
@@ -194,23 +162,17 @@ https://github.com/trending?since=weekly
 
 ### 5.1 东方财富
 
-```
-https://search.eastmoney.com/search?keyword=QUERY
-```
+`https://search.eastmoney.com/search?keyword=QUERY`
 
 ### 5.2 集思录
 
-```
-https://www.jisilu.cn/explore/?keyword=QUERY
-```
+`https://www.jisilu.cn/explore/?keyword=QUERY`
 
 投资社区，可转债、基金、LOF 等投资品种讨论。
 
 ### 5.3 财新
 
-```
-https://search.caixin.com/search/?keyword=QUERY
-```
+`https://search.caixin.com/search/?keyword=QUERY`
 
 ---
 
@@ -218,17 +180,13 @@ https://search.caixin.com/search/?keyword=QUERY
 
 ### 6.1 Wikipedia 中文
 
-```
-https://zh.wikipedia.org/w/index.php?search=QUERY&title=Special:Search
-```
+`https://zh.wikipedia.org/w/index.php?search=QUERY&title=Special:Search`
 
 中文维基百科，知识查询首选。
 
 ### 6.2 Wikipedia 英文
 
-```
-https://en.wikipedia.org/w/index.php?search=QUERY&title=Special:Search
-```
+`https://en.wikipedia.org/w/index.php?search=QUERY&title=Special:Search`
 
 英文维基百科，信息量最大的免费百科全书。
 
@@ -236,24 +194,22 @@ https://en.wikipedia.org/w/index.php?search=QUERY&title=Special:Search
 
 ## 使用示例
 
-```
-# 中文搜索
-web_fetch(url="https://www.baidu.com/s?wd=英伟达财报", extractMode="text", maxChars=12000)
-web_fetch(url="https://m.so.com/s?q=英伟达财报", extractMode="text", maxChars=12000)
+**中文搜索：**
+- 百度：`web_fetch(url="https://www.baidu.com/s?wd=英伟达财报", extractMode="text", maxChars=12000)`
+- 360：`web_fetch(url="https://m.so.com/s?q=英伟达财报", extractMode="text", maxChars=12000)`
 
-# 英文搜索
-web_fetch(url="https://search.brave.com/search?q=AI+news", extractMode="text", maxChars=8000)
-web_fetch(url="https://lite.duckduckgo.com/lite/?q=AI+news", extractMode="text", maxChars=8000)
+**英文搜索：**
+- Brave：`web_fetch(url="https://search.brave.com/search?q=AI+news", extractMode="text", maxChars=8000)`
+- DDG：`web_fetch(url="https://lite.duckduckgo.com/lite/?q=AI+news", extractMode="text", maxChars=8000)`
 
-# 公众号
-web_fetch(url="https://weixin.sogou.com/weixin?type=2&query=英伟达&page=1", extractMode="text", maxChars=10000)
+**公众号：**
+- 搜狗微信：`web_fetch(url="https://weixin.sogou.com/weixin?type=2&query=英伟达&page=1", extractMode="text", maxChars=10000)`
 
-# 知识查询
-web_fetch(url="https://zh.wikipedia.org/w/index.php?search=量子计算&title=Special:Search", extractMode="text", maxChars=8000)
+**知识查询：**
+- Wikipedia：`web_fetch(url="https://zh.wikipedia.org/w/index.php?search=量子计算&title=Special:Search", extractMode="text", maxChars=8000)`
 
-# 投资
-web_fetch(url="https://www.jisilu.cn/explore/?keyword=可转债", extractMode="text", maxChars=8000)
-```
+**投资：**
+- 集思录：`web_fetch(url="https://www.jisilu.cn/explore/?keyword=可转债", extractMode="text", maxChars=8000)`
 
 ---
 
