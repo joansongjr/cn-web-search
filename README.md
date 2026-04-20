@@ -30,3 +30,7 @@ clawhub install cn-web-search
 
 ### v0.9.0
 - 全部免费，移除付费引擎
+
+## Download History
+
+[![Download History](https://skill-history.com/chart/joansongjr/cn-web-search.svg)](https://skill-history.com/joansongjr/cn-web-search)
